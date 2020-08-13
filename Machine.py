@@ -2,7 +2,7 @@ from helpers import *
 from Board import *
 
 
-class Machine(Board):
+class Machine():
 
     # def getSpot(self):
     #     while True:
@@ -31,53 +31,34 @@ class Machine(Board):
     #             return pair
     #         print('Place already filled!')
 
-    def evaluate(self, side):
-        # check for not ended
-        if self.checkDraw() == (False, None):
-            return None
-        # check for draw
-        if self.checkDraw() == (True, None):
-            return 0
-        # check who wins
-        if self.checkLines() == (True, side):
-            return 1
-        if self.checkColumns() == (True, side):
-            return 1
-        return -1
+    def minimax(self, board, depth, side):
 
-    def movesLeft(self, game_board):
-        for i in range(len(game_board)):
-            for j in range(len(game_board[i])):
-                if game_board[i][j] == '-':
-                    return False
-        return True
-
-    def minimax(self, game_board, depth, side):
-        # check for draw and return (-1, -1, 0)
-        if self.evaluate(side) == 0:
-            return -1, -1, 0
-        # check for ending and return (-1, -1, {max = 1,min = -1})
-        if self.evaluate(side) == 1:
-            return -1, -1, 1
-        if self.evaluate(side) == -1:
-            return -1, -1, -1
-        if depth == 9 or self.movesLeft(game_board):
-            return -1, -1, 0
+        info = board.isOver()
+        if info[0]:
+            # is a draw
+            if info[1] == None:
+                return (-1, -1, 0)
+            # won game
+            if info[1] == side:
+                return (-1, -1, 1)
+            else:
+                # lost game
+                return (-1, -1, -1)
 
         bestValue = -1
         row = -1
         col = -1
 
         # Traverse all cells, evaluate minimax function for all empty cells.And return the cell with optimal value.
-        for i in range(len(game_board)):
-            for j in range(len(game_board[i])):
+        for i in range(len(board.game_board)):
+            for j in range(len(board.game_board)):
                 # Check if the cell is empty
-                if game_board[i][j] == '-':
+                if board.game_board[i][j] == '-':
                     # Make the move
-                    game_board[i][j] = side
+                    board.game_board[i][j] = side
 
                     # Compute evaluation function for this move
-                    fromRec = self.minimax(game_board, depth + 1, getOpSide(side))
+                    fromRec = self.minimax(board, depth + 1, getOpSide(side))
 
                     scoreFromRec = -fromRec[2]
                     # If the value of the current move is better than best value update best
@@ -87,7 +68,7 @@ class Machine(Board):
                         bestValue = scoreFromRec
 
                     # Undo the move
-                    game_board[i][j] = '-'
+                    board.game_board[i][j] = '-'
 
         return (row, col, bestValue)
 

@@ -31,10 +31,10 @@ class Game:
 
         while True:
             # machine moves
-            spot = (self.machine.minimax(self.board.getGameBoard(), 0, self.machine.getSide())[0],
-                    self.machine.minimax(self.board.getGameBoard(), 0, self.machine.getSide())[1])
+            spot = self.machine.minimax(self.board, 0, self.machine.getSide())
+
             print('Machine chose', end='\n\n')
-            self.board.applyMove(spot, self.machine.getSide())
+            self.board.applyMove((spot[0], spot[1]), self.machine.getSide())
             self.board.gameBoard_status()
             print()
 
@@ -45,9 +45,9 @@ class Game:
                 break
 
             # player moves
-            spot = self.player.getNextMove(self.board.getGameBoard())
+            playerSpot = self.player.getNextMove(self.board.getGameBoard())
             print('Player chose', end='\n\n')
-            self.board.applyMove(spot, self.player.getSide())
+            self.board.applyMove(playerSpot, self.player.getSide())
             self.board.gameBoard_status()
             print()
 

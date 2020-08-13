@@ -43,11 +43,11 @@ class Board:
     def checkColumn(self, column):
         if self.game_board[0][column] == 'X' and self.game_board[1][column] == 'X' and self.game_board[2][
             column] == 'X':
-            return True, 'X'
+            return (True, 'X')
 
         if self.game_board[0][column] == '0' and self.game_board[1][column] == '0' and self.game_board[2][
             column] == '0':
-            return True, '0'
+            return (True, '0')
 
         return False, None
 
@@ -75,12 +75,11 @@ class Board:
         return False, None
 
     def checkDraw(self):
-        flag = True
         for i in range(len(self.game_board)):
             for j in range(len(self.game_board[i])):
                 if self.game_board[i][j] == '-':
-                    flag = False
-        return flag, None
+                    return (False, None)
+        return (True, None)
 
     def isOver(self):
         info = self.checkLines()
@@ -99,4 +98,4 @@ class Board:
         if info[0]:
             return info
 
-        return False, None
+        return info
